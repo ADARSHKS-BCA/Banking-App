@@ -7,10 +7,26 @@
 <div class="row mb-4">
     <div class="col-md-12">
         <div class="balance-card">
-            <h5 class="mb-3"><i class="bi bi-wallet2"></i> Account Balance</h5>
-            <div class="balance-amount">${{ account.balance|floatformat:2 }}</div>
-            <p class="mb-0">Account: {{ account.account_number }}</p>
-            <p class="mb-0">{{ account.get_full_name }}</p>
+            <div class="row align-items-center">
+                <div class="col-md-2 text-center">
+                    {% if account.profile_picture %}
+                        <img src="{{ account.profile_picture.url }}" alt="Profile Picture" 
+                             class="img-fluid rounded-circle" 
+                             style="width: 100px; height: 100px; object-fit: cover; border: 3px solid white;">
+                    {% else %}
+                        <div class="rounded-circle bg-white text-primary d-inline-flex align-items-center justify-content-center" 
+                             style="width: 100px; height: 100px; font-size: 3rem;">
+                            <i class="bi bi-person"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-10">
+                    <h5 class="mb-3"><i class="bi bi-wallet2"></i> Account Balance</h5>
+                    <div class="balance-amount">${{ account.balance|floatformat:2 }}</div>
+                    <p class="mb-0">Account: {{ account.account_number }}</p>
+                    <p class="mb-0">{{ account.get_full_name }}</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

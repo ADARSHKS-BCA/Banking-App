@@ -73,6 +73,11 @@ class Account(models.Model):
     # Date of birth: Customer's date of birth
     date_of_birth = models.DateField()
     
+    # Profile picture: User's profile photo (optional)
+    # Images are uploaded to media/profile_pictures/ directory
+    # null=True and blank=True make this field optional
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
+    
     # ========== SECURITY FIELDS ==========
     
     # PIN: 4-digit personal identification number for account access

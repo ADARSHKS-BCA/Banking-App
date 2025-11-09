@@ -73,8 +73,8 @@ def account_create(request):
     """
     # Check if form was submitted (POST request)
     if request.method == 'POST':
-        # Create form instance with submitted data
-        form = AccountForm(request.POST)
+        # Create form instance with submitted data and files (for profile picture upload)
+        form = AccountForm(request.POST, request.FILES)
         
         # Validate the form
         if form.is_valid():

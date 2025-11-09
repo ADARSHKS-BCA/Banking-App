@@ -73,7 +73,7 @@ class AccountAdmin(admin.ModelAdmin):
         }),
         # Section 2: Customer Information
         ('Customer Information', {
-            'fields': ('first_name', 'last_name', 'email', 'phone', 'address', 'date_of_birth')
+            'fields': ('first_name', 'last_name', 'email', 'phone', 'address', 'date_of_birth', 'profile_picture')
         }),
         # Section 3: Security
         ('Security', {

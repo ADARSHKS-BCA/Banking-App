@@ -39,6 +39,17 @@ class AccountForm(forms.ModelForm):
         label="Confirm PIN"  # Display label in form
     )
     
+    # Profile picture field: Optional image upload for user profile
+    profile_picture = forms.ImageField(
+        required=False,  # Profile picture is optional
+        label="Profile Picture",
+        help_text="Upload your profile picture (optional). Accepted formats: JPG, PNG, GIF. Max size: 5MB.",
+        widget=forms.FileInput(attrs={
+            'accept': 'image/*',  # Only accept image files
+            'class': 'form-control'
+        })
+    )
+    
     class Meta:
         """
         Meta class: Tells Django which model and fields to use
@@ -49,13 +60,46 @@ class AccountForm(forms.ModelForm):
         """
         model = Account  # This form is for the Account model
         fields = ['first_name', 'last_name', 'email', 'phone', 'address', 
-                  'date_of_birth', 'account_type', 'pin']
+                  'date_of_birth', 'account_type', 'profile_picture', 'pin']
         widgets = {
             # Use HTML5 date picker for date of birth
             'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
             # Make address field a textarea with 3 rows
             'address': forms.Textarea(attrs={'rows': 3}),
         }
+    
+    def clean_profile_picture(self):
+        """
+        Validate profile picture upload
+        
+        This method validates:
+        1. File size (max 5MB)
+        2. File type (only images)
+        
+        Returns:
+            profile_picture: The validated image file
+            
+        Raises:
+            ValidationError: If file is too large or wrong type
+        """
+        profile_picture = self.cleaned_data.get('profile_picture')
+        
+        # If no picture uploaded, that's fine (it's optional)
+        if not profile_picture:
+            return profile_picture
+        
+        # Check file size (5MB = 5 * 1024 * 1024 bytes)
+        max_size = 5 * 1024 * 1024  # 5MB in bytes
+        if profile_picture.size > max_size:
+            raise forms.ValidationError("Image file too large. Maximum size is 5MB.")
+        
+        # Check file type by extension
+        allowed_extensions = ['.jpg', '.jpeg', '.png', '.gif']
+        file_name = profile_picture.name.lower()
+        if not any(file_name.endswith(ext) for ext in allowed_extensions):
+            raise forms.ValidationError("Invalid file type. Only JPG, PNG, and GIF images are allowed.")
+        
+        return profile_picture
     
     def clean(self):
         """
@@ -97,6 +141,9 @@ class AccountForm(forms.ModelForm):
         """
         Override save method to handle account creation
         
+        This method handles saving the account including the profile picture.
+        The profile picture is automatically saved to the media/profile_pictures/ directory.
+        
         Args:
             commit: If True, save to database immediately
             
@@ -107,7 +154,7 @@ class AccountForm(forms.ModelForm):
         account = super().save(commit=False)
         # If commit is True, save to database
         if commit:
-            account.save()  # This triggers account number generation
+            account.save()  # This triggers account number generation and saves profile picture
         return account
 
 
