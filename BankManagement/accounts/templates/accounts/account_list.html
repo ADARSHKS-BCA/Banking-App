@@ -1,0 +1,70 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}All Accounts - Bank Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">All Accounts</h3>
+        <a href="{% url 'accounts:account_create' %}" class="btn btn-light">+ Create New Account</a>
+    </div>
+    <div class="card-body">
+        <form method="get" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search by account number, name, email, or phone..." value="{{ search_query }}">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+        
+        {% if accounts %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Account Number</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Account Type</th>
+                            <th>Balance</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for account in accounts %}
+                        <tr>
+                            <td><strong>{{ account.account_number }}</strong></td>
+                            <td>{{ account.get_full_name }}</td>
+                            <td>{{ account.email }}</td>
+                            <td>{{ account.phone }}</td>
+                            <td>{{ account.account_type }}</td>
+                            <td>${{ account.balance|floatformat:2 }}</td>
+                            <td>
+                                {% if account.status == 'Active' %}
+                                    <span class="badge bg-success">{{ account.status }}</span>
+                                {% elif account.status == 'Inactive' %}
+                                    <span class="badge bg-warning">{{ account.status }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">{{ account.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'accounts:account_detail' account.account_number %}" class="btn btn-sm btn-primary">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <h5>No accounts found!</h5>
+                <p>Create your first account to get started.</p>
+                <a href="{% url 'accounts:account_create' %}" class="btn btn-primary">Create Account</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,87 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Transaction History - Bank Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">Transaction History - {{ account.account_number }}</h3>
+        <a href="{% url 'accounts:account_detail' account.account_number %}" class="btn btn-light">Back to Account</a>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <strong>Account Holder:</strong> {{ account.get_full_name }}<br>
+            <strong>Current Balance:</strong> <span class="h5 text-primary">${{ account.balance|floatformat:2 }}</span>
+        </div>
+        <hr>
+        {% if transactions %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>From Account</th>
+                            <th>To Account</th>
+                            <th>Description</th>
+                            <th>Balance After</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in transactions %}
+                        <tr>
+                            <td>{{ transaction.created_at|date:"M d, Y H:i" }}</td>
+                            <td>
+                                {% if transaction.transaction_type == 'Deposit' %}
+                                    <span class="badge bg-success">{{ transaction.transaction_type }}</span>
+                                {% elif transaction.transaction_type == 'Withdrawal' %}
+                                    <span class="badge bg-danger">{{ transaction.transaction_type }}</span>
+                                {% elif transaction.transaction_type == 'Transfer' %}
+                                    <span class="badge bg-info">{{ transaction.transaction_type }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ transaction.transaction_type }}</span>
+                                {% endif %}
+                            </td>
+                            <td><strong>${{ transaction.amount|floatformat:2 }}</strong></td>
+                            <td>
+                                {% if transaction.from_account %}
+                                    {{ transaction.from_account.account_number }}
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if transaction.to_account %}
+                                    {{ transaction.to_account.account_number }}
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ transaction.description|default:"-" }}</td>
+                            <td>${{ transaction.balance_after_transaction|floatformat:2 }}</td>
+                            <td>
+                                {% if transaction.status == 'Completed' %}
+                                    <span class="badge bg-success">{{ transaction.status }}</span>
+                                {% elif transaction.status == 'Pending' %}
+                                    <span class="badge bg-warning">{{ transaction.status }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">{{ transaction.status }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <h5>No transactions found!</h5>
+                <p>This account has no transaction history yet.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,141 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Account Details - Bank Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">Account Details</h3>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Account Number:</strong>
+                        <p class="h4 text-primary">{{ account.account_number }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Account Type:</strong>
+                        <p class="h5">{{ account.account_type }}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Name:</strong>
+                        <p>{{ account.get_full_name }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Email:</strong>
+                        <p>{{ account.email }}</p>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Phone:</strong>
+                        <p>{{ account.phone }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Date of Birth:</strong>
+                        <p>{{ account.date_of_birth }}</p>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <strong>Address:</strong>
+                    <p>{{ account.address }}</p>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Status:</strong>
+                        {% if account.status == 'Active' %}
+                            <span class="badge bg-success fs-6">{{ account.status }}</span>
+                        {% elif account.status == 'Inactive' %}
+                            <span class="badge bg-warning fs-6">{{ account.status }}</span>
+                        {% else %}
+                            <span class="badge bg-danger fs-6">{{ account.status }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Created:</strong>
+                        <p>{{ account.created_at|date:"F d, Y" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <h5>Current Balance</h5>
+                <h2 class="display-4">${{ account.balance|floatformat:2 }}</h2>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'transactions:deposit' %}" class="btn btn-success">Deposit Money</a>
+                    <a href="{% url 'transactions:withdraw' %}" class="btn btn-warning">Withdraw Money</a>
+                    <a href="{% url 'transactions:transfer' %}" class="btn btn-info">Transfer Money</a>
+                    <a href="{% url 'transactions:transaction_history' account.account_number %}" class="btn btn-primary">Transaction History</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Recent Transactions</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_transactions %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Description</th>
+                                    <th>Balance After</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in recent_transactions %}
+                                <tr>
+                                    <td>{{ transaction.created_at|date:"M d, Y H:i" }}</td>
+                                    <td>
+                                        {% if transaction.transaction_type == 'Deposit' %}
+                                            <span class="badge bg-success">{{ transaction.transaction_type }}</span>
+                                        {% elif transaction.transaction_type == 'Withdrawal' %}
+                                            <span class="badge bg-danger">{{ transaction.transaction_type }}</span>
+                                        {% elif transaction.transaction_type == 'Transfer' %}
+                                            <span class="badge bg-info">{{ transaction.transaction_type }}</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ transaction.transaction_type }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>${{ transaction.amount|floatformat:2 }}</td>
+                                    <td>{{ transaction.description }}</td>
+                                    <td>${{ transaction.balance_after_transaction|floatformat:2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="{% url 'transactions:transaction_history' account.account_number %}" class="btn btn-primary">View All Transactions</a>
+                {% else %}
+                    <p class="text-muted">No transactions yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

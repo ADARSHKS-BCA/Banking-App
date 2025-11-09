@@ -1,0 +1,70 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Transfer Money - Bank Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">Transfer Money</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">From Account Number</label>
+                            {{ form.from_account_number }}
+                            {% if form.from_account_number.errors %}
+                                <div class="text-danger">{{ form.from_account_number.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">To Account Number</label>
+                            {{ form.to_account_number }}
+                            {% if form.to_account_number.errors %}
+                                <div class="text-danger">{{ form.to_account_number.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">PIN</label>
+                        {{ form.pin }}
+                        {% if form.pin.errors %}
+                            <div class="text-danger">{{ form.pin.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Amount</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            {{ form.amount }}
+                        </div>
+                        {% if form.amount.errors %}
+                            <div class="text-danger">{{ form.amount.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description (Optional)</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="text-danger">{{ form.description.errors }}</div>
+                        {% endif %}
+                    </div>
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-info btn-lg">Transfer Money</button>
+                        <a href="{% url 'accounts:home' %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
