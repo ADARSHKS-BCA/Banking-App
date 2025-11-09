@@ -1,29 +1,33 @@
 {% extends 'accounts/base.html' %}
 
-{% block title %}Account Login - Bank Management System{% endblock %}
+{% block title %}Login - SecureBank{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5">
         <div class="card">
-            <div class="card-header">
-                <h3 class="mb-0">Account Login</h3>
+            <div class="card-header text-center">
+                <h3 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> Account Login</h3>
             </div>
             <div class="card-body">
                 <form method="post">
                     {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="form-label">Account Number</label>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-credit-card"></i> Account Number
+                        </label>
                         {{ form.account_number }}
                         {% if form.account_number.errors %}
-                            <div class="text-danger">{{ form.account_number.errors }}</div>
+                            <div class="text-danger small mt-1">{{ form.account_number.errors }}</div>
                         {% endif %}
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">PIN</label>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-lock"></i> PIN
+                        </label>
                         {{ form.pin }}
                         {% if form.pin.errors %}
-                            <div class="text-danger">{{ form.pin.errors }}</div>
+                            <div class="text-danger small mt-1">{{ form.pin.errors }}</div>
                         {% endif %}
                     </div>
                     {% if form.non_field_errors %}
@@ -32,13 +36,20 @@
                         </div>
                     {% endif %}
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">Login</button>
-                        <a href="{% url 'accounts:home' %}" class="btn btn-secondary">Back to Home</a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </button>
                     </div>
                 </form>
+                <hr class="my-4">
+                <div class="text-center">
+                    <p class="mb-0">Don't have an account?</p>
+                    <a href="{% url 'accounts:account_create' %}" class="btn btn-outline-primary mt-2">
+                        <i class="bi bi-person-plus"></i> Create New Account
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
-

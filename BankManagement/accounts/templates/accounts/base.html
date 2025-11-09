@@ -5,76 +5,239 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Bank Management System{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e8ba3 100%);
             min-height: 100vh;
-            padding: 20px 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        
         .navbar {
-            background: rgba(255, 255, 255, 0.95) !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.98) !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            padding: 1rem 0;
         }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #1e3c72 !important;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: #333 !important;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #2a5298 !important;
+            transform: translateY(-2px);
+        }
+        
         .card {
             border: none;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            background: white;
         }
+        
         .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            border-radius: 15px 15px 0 0 !important;
-            padding: 15px 20px;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
+            padding: 1.5rem;
+            font-weight: 600;
         }
+        
+        .card-body {
+            padding: 2rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border: none;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
         .btn-primary:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #2a5298;
+            box-shadow: 0 0 0 0.2rem rgba(42, 82, 152, 0.25);
+        }
+        
+        .form-control-plaintext {
+            background: #f8f9fa;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+        
         .table {
             background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .table thead {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+        
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .balance-card {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .balance-amount {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        
+        .icon-large {
+            font-size: 3rem;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'accounts:home' %}">🏦 Bank Management</a>
+            <a class="navbar-brand" href="{% url 'accounts:home' %}">
+                <i class="bi bi-bank"></i> SecureBank
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:home' %}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:account_create' %}">Create Account</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:account_list' %}">All Accounts</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:account_login' %}">Login</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="transactionsDropdown" role="button" data-bs-toggle="dropdown">
-                            Transactions
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'transactions:deposit' %}">Deposit</a></li>
-                            <li><a class="dropdown-item" href="{% url 'transactions:withdraw' %}">Withdraw</a></li>
-                            <li><a class="dropdown-item" href="{% url 'transactions:transfer' %}">Transfer</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'transactions:all_transactions' %}">All Transactions</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/">Admin</a>
-                    </li>
+                    {% if request.session.account_number %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:home' %}">
+                                <i class="bi bi-house-door"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="transactionsDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-arrow-left-right"></i> Transactions
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'transactions:deposit' %}"><i class="bi bi-plus-circle"></i> Deposit</a></li>
+                                <li><a class="dropdown-item" href="{% url 'transactions:withdraw' %}"><i class="bi bi-dash-circle"></i> Withdraw</a></li>
+                                <li><a class="dropdown-item" href="{% url 'transactions:transfer' %}"><i class="bi bi-arrow-left-right"></i> Transfer</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'transactions:transaction_history' %}"><i class="bi bi-clock-history"></i> History</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:account_detail' %}">
+                                <i class="bi bi-person-circle"></i> My Account
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" href="{% url 'accounts:account_logout' %}">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:account_login' %}">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:account_create' %}">
+                                <i class="bi bi-person-plus"></i> Create Account
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -84,6 +247,7 @@
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <i class="bi bi-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' or message.tags == 'danger' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
@@ -97,4 +261,3 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

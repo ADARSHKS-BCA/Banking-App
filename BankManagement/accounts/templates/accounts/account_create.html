@@ -1,97 +1,119 @@
 {% extends 'accounts/base.html' %}
 
-{% block title %}Create Account - Bank Management System{% endblock %}
+{% block title %}Create Account - SecureBank{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card">
-            <div class="card-header">
-                <h3 class="mb-0">Create New Bank Account</h3>
+            <div class="card-header text-center">
+                <h3 class="mb-0"><i class="bi bi-person-plus"></i> Create New Bank Account</h3>
             </div>
             <div class="card-body">
                 <form method="post">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">First Name *</label>
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-person"></i> First Name *
+                            </label>
                             {{ form.first_name }}
                             {% if form.first_name.errors %}
-                                <div class="text-danger">{{ form.first_name.errors }}</div>
+                                <div class="text-danger small">{{ form.first_name.errors }}</div>
                             {% endif %}
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Last Name *</label>
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-person"></i> Last Name *
+                            </label>
                             {{ form.last_name }}
                             {% if form.last_name.errors %}
-                                <div class="text-danger">{{ form.last_name.errors }}</div>
+                                <div class="text-danger small">{{ form.last_name.errors }}</div>
                             {% endif %}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Email *</label>
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-envelope"></i> Email *
+                            </label>
                             {{ form.email }}
                             {% if form.email.errors %}
-                                <div class="text-danger">{{ form.email.errors }}</div>
+                                <div class="text-danger small">{{ form.email.errors }}</div>
                             {% endif %}
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Phone *</label>
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-telephone"></i> Phone *
+                            </label>
                             {{ form.phone }}
                             {% if form.phone.errors %}
-                                <div class="text-danger">{{ form.phone.errors }}</div>
+                                <div class="text-danger small">{{ form.phone.errors }}</div>
                             {% endif %}
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Address *</label>
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-geo-alt"></i> Address *
+                        </label>
                         {{ form.address }}
                         {% if form.address.errors %}
-                            <div class="text-danger">{{ form.address.errors }}</div>
+                            <div class="text-danger small">{{ form.address.errors }}</div>
                         {% endif %}
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Date of Birth *</label>
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-calendar"></i> Date of Birth *
+                            </label>
                             {{ form.date_of_birth }}
                             {% if form.date_of_birth.errors %}
-                                <div class="text-danger">{{ form.date_of_birth.errors }}</div>
+                                <div class="text-danger small">{{ form.date_of_birth.errors }}</div>
                             {% endif %}
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Account Type *</label>
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-bank"></i> Account Type *
+                            </label>
                             {{ form.account_type }}
                             {% if form.account_type.errors %}
-                                <div class="text-danger">{{ form.account_type.errors }}</div>
+                                <div class="text-danger small">{{ form.account_type.errors }}</div>
                             {% endif %}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">PIN (4 digits) *</label>
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-lock"></i> PIN (4 digits) *
+                            </label>
                             {{ form.pin }}
                             <small class="form-text text-muted">{{ form.pin.help_text }}</small>
                             {% if form.pin.errors %}
-                                <div class="text-danger">{{ form.pin.errors }}</div>
+                                <div class="text-danger small">{{ form.pin.errors }}</div>
                             {% endif %}
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Confirm PIN *</label>
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-lock-fill"></i> Confirm PIN *
+                            </label>
                             {{ form.confirm_pin }}
                             {% if form.confirm_pin.errors %}
-                                <div class="text-danger">{{ form.confirm_pin.errors }}</div>
+                                <div class="text-danger small">{{ form.confirm_pin.errors }}</div>
                             {% endif %}
                         </div>
                     </div>
                     {% if form.non_field_errors %}
                         <div class="alert alert-danger">
-                            {{ form.non_field_errors }}
+                            <i class="bi bi-exclamation-triangle"></i> {{ form.non_field_errors }}
                         </div>
                     {% endif %}
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">Create Account</button>
-                        <a href="{% url 'accounts:home' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-check-circle"></i> Create Account
+                        </button>
+                        <a href="{% url 'accounts:account_login' %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Login
+                        </a>
                     </div>
                 </form>
             </div>
@@ -99,4 +121,3 @@
     </div>
 </div>
 {% endblock %}
-

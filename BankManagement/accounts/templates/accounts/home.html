@@ -1,76 +1,125 @@
 {% extends 'accounts/base.html' %}
 
-{% block title %}Home - Bank Management System{% endblock %}
+{% block title %}Dashboard - SecureBank{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-10">
-        <div class="card">
-            <div class="card-header text-center">
-                <h2 class="mb-0">Welcome to Bank Management System</h2>
+{% if account %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="balance-card">
+            <h5 class="mb-3"><i class="bi bi-wallet2"></i> Account Balance</h5>
+            <div class="balance-amount">${{ account.balance|floatformat:2 }}</div>
+            <p class="mb-0">Account: {{ account.account_number }}</p>
+            <p class="mb-0">{{ account.get_full_name }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card feature-card text-center">
+            <div class="card-body">
+                <div class="icon-large text-success">
+                    <i class="bi bi-plus-circle-fill"></i>
+                </div>
+                <h5>Deposit</h5>
+                <p class="text-muted small">Add money to your account</p>
+                <a href="{% url 'transactions:deposit' %}" class="btn btn-success btn-sm">Deposit</a>
             </div>
-            <div class="card-body p-5">
-                <div class="row text-center">
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h3 class="text-primary">📝</h3>
-                                <h5>Create Account</h5>
-                                <p>Open a new bank account</p>
-                                <a href="{% url 'accounts:account_create' %}" class="btn btn-primary">Create Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h3 class="text-success">🔐</h3>
-                                <h5>Account Login</h5>
-                                <p>Access your account</p>
-                                <a href="{% url 'accounts:account_login' %}" class="btn btn-primary">Login</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h3 class="text-info">💰</h3>
-                                <h5>Transactions</h5>
-                                <p>Deposit, Withdraw, Transfer</p>
-                                <a href="{% url 'transactions:deposit' %}" class="btn btn-primary">View Options</a>
-                            </div>
-                        </div>
-                    </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card feature-card text-center">
+            <div class="card-body">
+                <div class="icon-large text-warning">
+                    <i class="bi bi-dash-circle-fill"></i>
                 </div>
-                <hr>
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <h4>Quick Actions</h4>
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <a href="{% url 'accounts:account_list' %}" class="text-decoration-none">View All Accounts</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="{% url 'transactions:all_transactions' %}" class="text-decoration-none">View All Transactions</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="/admin/" class="text-decoration-none">Admin Panel</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <h4>Features</h4>
-                        <ul class="list-group">
-                            <li class="list-group-item">✅ Account Management</li>
-                            <li class="list-group-item">✅ Deposit & Withdrawal</li>
-                            <li class="list-group-item">✅ Money Transfer</li>
-                            <li class="list-group-item">✅ Transaction History</li>
-                        </ul>
-                    </div>
+                <h5>Withdraw</h5>
+                <p class="text-muted small">Withdraw money from account</p>
+                <a href="{% url 'transactions:withdraw' %}" class="btn btn-warning btn-sm">Withdraw</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card feature-card text-center">
+            <div class="card-body">
+                <div class="icon-large text-info">
+                    <i class="bi bi-arrow-left-right"></i>
                 </div>
+                <h5>Transfer</h5>
+                <p class="text-muted small">Transfer to another account</p>
+                <a href="{% url 'transactions:transfer' %}" class="btn btn-info btn-sm">Transfer</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card feature-card text-center">
+            <div class="card-body">
+                <div class="icon-large text-primary">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <h5>History</h5>
+                <p class="text-muted small">View transaction history</p>
+                <a href="{% url 'transactions:transaction_history' %}" class="btn btn-primary btn-sm">View</a>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
 
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recent Transactions</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_transactions %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Description</th>
+                                    <th>Balance After</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in recent_transactions %}
+                                <tr>
+                                    <td>{{ transaction.created_at|date:"M d, Y H:i" }}</td>
+                                    <td>
+                                        {% if transaction.transaction_type == 'Deposit' %}
+                                            <span class="badge bg-success">{{ transaction.transaction_type }}</span>
+                                        {% elif transaction.transaction_type == 'Withdrawal' %}
+                                            <span class="badge bg-danger">{{ transaction.transaction_type }}</span>
+                                        {% elif transaction.transaction_type == 'Transfer' %}
+                                            <span class="badge bg-info">{{ transaction.transaction_type }}</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ transaction.transaction_type }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><strong>${{ transaction.amount|floatformat:2 }}</strong></td>
+                                    <td>{{ transaction.description|truncatewords:10 }}</td>
+                                    <td>${{ transaction.balance_after_transaction|floatformat:2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'transactions:transaction_history' %}" class="btn btn-primary">View All Transactions</a>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                        <p class="text-muted mt-3">No transactions yet</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
