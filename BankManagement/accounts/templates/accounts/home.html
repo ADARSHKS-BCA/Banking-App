@@ -4,134 +4,152 @@
 
 {% block content %}
 {% if account %}
-<div class="row mb-4">
-    <div class="col-md-12">
-        <div class="balance-card">
-            <div class="row align-items-center">
-                <div class="col-md-2 text-center">
-                    {% if account.profile_picture %}
-                        <img src="{{ account.profile_picture.url }}" alt="Profile Picture" 
-                             class="img-fluid rounded-circle" 
-                             style="width: 100px; height: 100px; object-fit: cover; border: 3px solid white;">
-                    {% else %}
-                        <div class="rounded-circle bg-white text-primary d-inline-flex align-items-center justify-content-center" 
-                             style="width: 100px; height: 100px; font-size: 3rem;">
-                            <i class="bi bi-person"></i>
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="col-md-10">
-                    <h5 class="mb-3"><i class="bi bi-wallet2"></i> Account Balance</h5>
-                    <div class="balance-amount">${{ account.balance|floatformat:2 }}</div>
-                    <p class="mb-0">Account: {{ account.account_number }}</p>
-                    <p class="mb-0">{{ account.get_full_name }}</p>
-                </div>
-            </div>
+<style>
+    .action-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .action-card:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-5px);
+    }
+
+    .action-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        background: -webkit-linear-gradient(45deg, #00dbde, #fc00ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
+
+<div class="row mb-5">
+    <div class="col-md-6 mx-auto">
+        <!-- Balance Display -->
+        <div class="text-center mt-4">
+            <h6 class="text-white-50 text-uppercase letter-spacing-2">Total Balance</h6>
+            <h1 class="text-white fw-bold display-4">{{ account.balance }}</h1>
         </div>
     </div>
 </div>
 
 <div class="row mb-4">
     <div class="col-md-3 mb-3">
-        <div class="card feature-card text-center">
-            <div class="card-body">
-                <div class="icon-large text-success">
-                    <i class="bi bi-plus-circle-fill"></i>
+        <a href="{% url 'transactions:deposit' %}" class="text-decoration-none">
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="bi bi-wallet2"></i>
                 </div>
-                <h5>Deposit</h5>
-                <p class="text-muted small">Add money to your account</p>
-                <a href="{% url 'transactions:deposit' %}" class="btn btn-success btn-sm">Deposit</a>
+                <h5 class="text-white">Deposit</h5>
+                <p class="text-white-50 small mb-0">Add funds instantly</p>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-md-3 mb-3">
-        <div class="card feature-card text-center">
-            <div class="card-body">
-                <div class="icon-large text-warning">
-                    <i class="bi bi-dash-circle-fill"></i>
+        <a href="{% url 'transactions:withdraw' %}" class="text-decoration-none">
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="bi bi-cash-coin"></i>
                 </div>
-                <h5>Withdraw</h5>
-                <p class="text-muted small">Withdraw money from account</p>
-                <a href="{% url 'transactions:withdraw' %}" class="btn btn-warning btn-sm">Withdraw</a>
+                <h5 class="text-white">Withdraw</h5>
+                <p class="text-white-50 small mb-0">Get cash out</p>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-md-3 mb-3">
-        <div class="card feature-card text-center">
-            <div class="card-body">
-                <div class="icon-large text-info">
-                    <i class="bi bi-arrow-left-right"></i>
+        <a href="{% url 'transactions:transfer' %}" class="text-decoration-none">
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="bi bi-send"></i>
                 </div>
-                <h5>Transfer</h5>
-                <p class="text-muted small">Transfer to another account</p>
-                <a href="{% url 'transactions:transfer' %}" class="btn btn-info btn-sm">Transfer</a>
+                <h5 class="text-white">Transfer</h5>
+                <p class="text-white-50 small mb-0">Send to friends</p>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-md-3 mb-3">
-        <div class="card feature-card text-center">
-            <div class="card-body">
-                <div class="icon-large text-primary">
+        <a href="{% url 'transactions:transaction_history' %}" class="text-decoration-none">
+            <div class="action-card">
+                <div class="action-icon">
                     <i class="bi bi-clock-history"></i>
                 </div>
-                <h5>History</h5>
-                <p class="text-muted small">View transaction history</p>
-                <a href="{% url 'transactions:transaction_history' %}" class="btn btn-primary btn-sm">View</a>
+                <h5 class="text-white">History</h5>
+                <p class="text-white-50 small mb-0">Track spending</p>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recent Transactions</h5>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i> Recent Transactions</h5>
+                <a href="{% url 'transactions:transaction_history' %}" class="btn btn-sm btn-outline-light">View All</a>
             </div>
             <div class="card-body">
                 {% if recent_transactions %}
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Type</th>
-                                    <th>Amount</th>
-                                    <th>Description</th>
-                                    <th>Balance After</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for transaction in recent_transactions %}
-                                <tr>
-                                    <td>{{ transaction.created_at|date:"M d, Y H:i" }}</td>
-                                    <td>
-                                        {% if transaction.transaction_type == 'Deposit' %}
-                                            <span class="badge bg-success">{{ transaction.transaction_type }}</span>
-                                        {% elif transaction.transaction_type == 'Withdrawal' %}
-                                            <span class="badge bg-danger">{{ transaction.transaction_type }}</span>
-                                        {% elif transaction.transaction_type == 'Transfer' %}
-                                            <span class="badge bg-info">{{ transaction.transaction_type }}</span>
-                                        {% else %}
-                                            <span class="badge bg-secondary">{{ transaction.transaction_type }}</span>
-                                        {% endif %}
-                                    </td>
-                                    <td><strong>${{ transaction.amount|floatformat:2 }}</strong></td>
-                                    <td>{{ transaction.description|truncatewords:10 }}</td>
-                                    <td>${{ transaction.balance_after_transaction|floatformat:2 }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="text-center mt-3">
-                        <a href="{% url 'transactions:transaction_history' %}" class="btn btn-primary">View All Transactions</a>
-                    </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in recent_transactions %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <span class="fw-bold">{{ transaction.created_at|date:"M d" }}</span>
+                                        <small class="text-white-50">{{ transaction.created_at|date:"H:i" }}</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if transaction.transaction_type == 'Deposit' %}
+                                    <div class="d-flex align-items-center text-success">
+                                        <i class="bi bi-arrow-down-circle-fill me-2"></i> Deposit
+                                    </div>
+                                    {% elif transaction.transaction_type == 'Withdrawal' %}
+                                    <div class="d-flex align-items-center text-danger">
+                                        <i class="bi bi-arrow-up-circle-fill me-2"></i> Withdrawal
+                                    </div>
+                                    {% elif transaction.transaction_type == 'Transfer' %}
+                                    <div class="d-flex align-items-center text-info">
+                                        <i class="bi bi-arrow-right-circle-fill me-2"></i> Transfer
+                                    </div>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{{ transaction.transaction_type }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ transaction.description|default:"-" }}</td>
+                                <td
+                                    class="fw-bold {% if transaction.transaction_type == 'Deposit' %}text-success{% else %}text-white{% endif %}">
+                                    {% if transaction.transaction_type == 'Deposit' %}+{% else %}-{% endif %}
+                                    Deposited
+                                </td>
+                                <td><span class="badge bg-success bg-opacity-25 text-success">Completed</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
                 {% else %}
-                    <div class="text-center py-5">
-                        <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
-                        <p class="text-muted mt-3">No transactions yet</p>
-                    </div>
+                <div class="text-center py-5">
+                    <i class="bi bi-receipt" style="font-size: 3rem; opacity: 0.3;"></i>
+                    <p class="text-white-50 mt-3">No recent transactions found</p>
+                </div>
                 {% endif %}
             </div>
         </div>

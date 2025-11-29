@@ -57,7 +57,7 @@ def deposit(request):
                 transaction_type='Deposit',  # Type of transaction
                 amount=amount,                # Amount deposited
                 to_account=account,           # Account receiving money
-                description=description or f'Deposit of {amount}',  # Description or default
+                description=description if description else 'Deposit',  # Default to 'Deposit'
                 balance_after_transaction=account.balance,  # Balance after deposit
                 status='Completed'           # Transaction completed successfully
             )
@@ -115,7 +115,7 @@ def withdraw(request):
                     transaction_type='Withdrawal',
                     amount=amount,
                     from_account=account,  # Account losing money
-                    description=description or f'Withdrawal of {amount}',
+                    description=description if description else 'Withdrawal',
                     balance_after_transaction=account.balance,
                     status='Completed'
                 )
@@ -202,7 +202,7 @@ def transfer(request):
                         amount=amount,
                         from_account=from_account_locked,
                         to_account=to_account,
-                        description=description or f'Transfer of {amount} to {to_account_number}',
+                        description=description if description else f'Transfer to {to_account_number}',
                         balance_after_transaction=from_account_locked.balance,  # Balance of source account
                         status='Completed'
                     )

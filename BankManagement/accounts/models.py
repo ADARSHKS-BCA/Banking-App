@@ -23,6 +23,7 @@ class Account(models.Model):
     """
     
     # Define choices for account types that users can select
+    # This  saves the column name has Savings
     ACCOUNT_TYPE_CHOICES = [
         ('Savings', 'Savings'),           # Regular savings account
         ('Current', 'Current'),           # Current/checking account
@@ -129,20 +130,22 @@ class Account(models.Model):
     
     def generate_account_number(self):
         """
-        Generate a unique 12-digit account number
+        Generate a unique 12-digit account number based on DOB
         
-        This method creates a random 12-digit number and checks if it already exists.
-        If it exists, it generates a new one until a unique number is found.
-        
-        Returns: A unique 12-digit account number string
+        Format: YYYYMMDD + 4 random digits
+        Example: 199001015678
         """
-        # Keep generating until we find a unique number
+        # Get DOB in YYYYMMDD format
+        dob_str = self.date_of_birth.strftime('%Y%m%d')
+        
         while True:
-            # Generate random 12-digit number using digits 0-9
-            account_num = ''.join(random.choices(string.digits, k=12))
-            # Check if this number already exists in database
+            # Generate 4 random digits
+            random_digits = ''.join(random.choices(string.digits, k=4))
+            # Combine DOB and random digits
+            account_num = dob_str + random_digits
+            
+            # Check if this number already exists
             if not Account.objects.filter(account_number=account_num).exists():
-                # Return the unique number
                 return account_num
     
     def get_full_name(self):
