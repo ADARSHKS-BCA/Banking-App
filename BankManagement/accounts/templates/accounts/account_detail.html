@@ -3,107 +3,309 @@
 {% block title %}My Account - SecureBank{% endblock %}
 
 {% block content %}
+<style>
+    /* ── Profile Hero ── */
+    .profile-hero {
+        position: relative;
+        background: var(--gradient-primary);
+        border-radius: var(--radius-xl);
+        padding: 2.5rem 2rem 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        box-shadow: 0 12px 40px rgba(108, 99, 255, 0.25);
+    }
+
+    .profile-hero::before {
+        content: '';
+        position: absolute;
+        top: -60%;
+        right: -25%;
+        width: 350px;
+        height: 350px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 50%;
+    }
+
+    .profile-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -50%;
+        left: -15%;
+        width: 250px;
+        height: 250px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 50%;
+    }
+
+    .avatar-ring {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        padding: 4px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
+        display: inline-block;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+        animation: pulse-ring 4s ease-in-out infinite;
+    }
+
+    .avatar-ring img,
+    .avatar-ring .avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .avatar-placeholder {
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+    }
+
+    .profile-name {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .profile-type {
+        opacity: 0.75;
+        font-size: 0.9rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ── Info Tiles ── */
+    .info-tile {
+        background: var(--glass-bg);
+        border: var(--glass-border);
+        border-radius: var(--radius-md);
+        padding: 1.25rem;
+        transition: all 0.3s ease;
+    }
+
+    .info-tile:hover {
+        background: var(--bg-card-hover);
+        border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .info-tile-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .info-tile-label i {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 0.85rem;
+    }
+
+    .info-tile-value {
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--text-primary);
+    }
+
+    /* ── Balance Highlight ── */
+    .balance-highlight {
+        background: var(--gradient-primary);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(108, 99, 255, 0.25);
+    }
+
+    .balance-highlight-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        opacity: 0.8;
+        font-weight: 600;
+    }
+
+    .balance-highlight-value {
+        font-family: 'Outfit', sans-serif;
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    /* ── Quick Actions ── */
+    .quick-action-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.85rem 1.25rem;
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        color: var(--text-primary);
+        background: var(--glass-bg);
+        border: var(--glass-border);
+        transition: all 0.3s ease;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .quick-action-btn:hover {
+        background: var(--bg-card-hover);
+        transform: translateX(4px);
+        color: var(--text-primary);
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .quick-action-btn .qa-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: white;
+        flex-shrink: 0;
+    }
+</style>
+
+<!-- Profile Hero -->
+<div class="profile-hero">
+    <div class="avatar-ring">
+        {% if account.profile_picture %}
+        <img src="{{ account.profile_picture.url }}" alt="Profile Picture">
+        {% else %}
+        <div class="avatar-placeholder">
+            <i class="bi bi-person-fill"></i>
+        </div>
+        {% endif %}
+    </div>
+    <h3 class="profile-name">{{ account.get_full_name }}</h3>
+    <p class="profile-type">{{ account.account_type }} Account</p>
+</div>
+
 <div class="row">
-    <div class="col-md-8">
+    <!-- Left: Account Details -->
+    <div class="col-lg-8">
         <div class="card">
             <div class="card-header">
-                <h3 class="mb-0"><i class="bi bi-person-circle"></i> Account Details</h3>
+                <h5 class="mb-0"><i class="bi bi-person-vcard me-2"></i> Account Information</h5>
             </div>
             <div class="card-body">
-                <div class="row mb-4">
+                <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="text-muted small">Account Number</label>
-                        <p class="h5 text-primary fw-bold">{{ account.account_number }}</p>
+                        <div class="info-tile">
+                            <div class="info-tile-label"><i class="bi bi-credit-card-2-front"></i> Account Number</div>
+                            <div class="info-tile-value" style="color: var(--accent-1);">{{ account.account_number }}
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="text-muted small">Account Type</label>
-                        <p class="h5">{{ account.account_type }}</p>
-                    </div>
-                </div>
-                <hr>
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label class="text-muted small">Full Name</label>
-                        <p class="h6">{{ account.get_full_name }}</p>
+                        <div class="info-tile">
+                            <div class="info-tile-label"><i class="bi bi-bank"></i> Account Type</div>
+                            <div class="info-tile-value">{{ account.account_type }}</div>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="text-muted small">Email</label>
-                        <p class="h6">{{ account.email }}</p>
-                    </div>
-                </div>
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label class="text-muted small">Phone</label>
-                        <p class="h6">{{ account.phone }}</p>
+                        <div class="info-tile">
+                            <div class="info-tile-label"><i class="bi bi-person"></i> Full Name</div>
+                            <div class="info-tile-value">{{ account.get_full_name }}</div>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="text-muted small">Date of Birth</label>
-                        <p class="h6">{{ account.date_of_birth }}</p>
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <label class="text-muted small">Address</label>
-                    <p class="h6">{{ account.address }}</p>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label class="text-muted small">Status</label>
-                        <p>
-                            {% if account.status == 'Active' %}
-                                <span class="badge bg-success fs-6">{{ account.status }}</span>
-                            {% elif account.status == 'Inactive' %}
-                                <span class="badge bg-warning fs-6">{{ account.status }}</span>
-                            {% else %}
-                                <span class="badge bg-danger fs-6">{{ account.status }}</span>
-                            {% endif %}
-                        </p>
+                        <div class="info-tile">
+                            <div class="info-tile-label"><i class="bi bi-envelope"></i> Email</div>
+                            <div class="info-tile-value">{{ account.email }}</div>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="text-muted small">Account Created</label>
-                        <p class="h6">{{ account.created_at|date:"F d, Y" }}</p>
+                        <div class="info-tile">
+                            <div class="info-tile-label"><i class="bi bi-telephone"></i> Phone</div>
+                            <div class="info-tile-value">{{ account.phone }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-tile">
+                            <div class="info-tile-label"><i class="bi bi-calendar-event"></i> Date of Birth</div>
+                            <div class="info-tile-value">{{ account.date_of_birth }}</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="info-tile">
+                            <div class="info-tile-label"><i class="bi bi-geo-alt"></i> Address</div>
+                            <div class="info-tile-value">{{ account.address }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-tile">
+                            <div class="info-tile-label"><i class="bi bi-activity"></i> Status</div>
+                            <div class="info-tile-value">
+                                {% if account.status == 'Active' %}
+                                <span class="badge bg-success" style="font-size:0.85rem;">{{ account.status }}</span>
+                                {% elif account.status == 'Inactive' %}
+                                <span class="badge bg-warning" style="font-size:0.85rem;">{{ account.status }}</span>
+                                {% else %}
+                                <span class="badge bg-danger" style="font-size:0.85rem;">{{ account.status }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-tile">
+                            <div class="info-tile-label"><i class="bi bi-calendar-check"></i> Account Created</div>
+                            <div class="info-tile-value">{{ account.created_at|date:"F d, Y" }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card mb-3">
-            <div class="card-body text-center">
-                {% if account.profile_picture %}
-                    <img src="{{ account.profile_picture.url }}" alt="Profile Picture" 
-                         class="img-fluid rounded-circle mb-3" 
-                         style="width: 150px; height: 150px; object-fit: cover; border: 4px solid #2a5298;">
-                {% else %}
-                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" 
-                         style="width: 150px; height: 150px; font-size: 4rem;">
-                        <i class="bi bi-person"></i>
-                    </div>
-                {% endif %}
-                <h5 class="mb-1">{{ account.get_full_name }}</h5>
-                <p class="text-muted small mb-0">{{ account.account_type }} Account</p>
-            </div>
+
+    <!-- Right: Balance & Quick Actions -->
+    <div class="col-lg-4">
+        <div class="balance-highlight mb-3">
+            <div class="balance-highlight-label">Current Balance</div>
+            <div class="balance-highlight-value">${{ account.balance|floatformat:2 }}</div>
         </div>
-        <div class="balance-card">
-            <h5><i class="bi bi-wallet2"></i> Current Balance</h5>
-            <div class="balance-amount">${{ account.balance|floatformat:2 }}</div>
-        </div>
-        <div class="card mt-3">
+
+        <div class="card">
             <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-lightning-charge"></i> Quick Actions</h5>
+                <h5 class="mb-0"><i class="bi bi-lightning-charge-fill me-2"></i> Quick Actions</h5>
             </div>
             <div class="card-body">
                 <div class="d-grid gap-2">
-                    <a href="{% url 'transactions:deposit' %}" class="btn btn-success">
-                        <i class="bi bi-plus-circle"></i> Deposit Money
+                    <a href="{% url 'transactions:deposit' %}" class="quick-action-btn">
+                        <span class="qa-icon" style="background: var(--gradient-success);"><i
+                                class="bi bi-plus-lg"></i></span>
+                        Deposit Money
                     </a>
-                    <a href="{% url 'transactions:withdraw' %}" class="btn btn-warning">
-                        <i class="bi bi-dash-circle"></i> Withdraw Money
+                    <a href="{% url 'transactions:withdraw' %}" class="quick-action-btn">
+                        <span class="qa-icon" style="background: var(--gradient-warning);"><i
+                                class="bi bi-dash-lg"></i></span>
+                        Withdraw Money
                     </a>
-                    <a href="{% url 'transactions:transfer' %}" class="btn btn-info">
-                        <i class="bi bi-arrow-left-right"></i> Transfer Money
+                    <a href="{% url 'transactions:transfer' %}" class="quick-action-btn">
+                        <span class="qa-icon" style="background: var(--gradient-info);"><i
+                                class="bi bi-arrow-left-right"></i></span>
+                        Transfer Money
                     </a>
-                    <a href="{% url 'transactions:transaction_history' %}" class="btn btn-primary">
-                        <i class="bi bi-clock-history"></i> Transaction History
+                    <a href="{% url 'transactions:transaction_history' %}" class="quick-action-btn">
+                        <span class="qa-icon" style="background: var(--gradient-primary);"><i
+                                class="bi bi-clock-history"></i></span>
+                        Transaction History
                     </a>
                 </div>
             </div>
@@ -111,56 +313,57 @@
     </div>
 </div>
 
-<div class="row mt-4">
+<!-- Recent Transactions -->
+<div class="row mt-3">
     <div class="col-12">
         <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recent Transactions</h5>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i> Recent Transactions</h5>
+                <a href="{% url 'transactions:transaction_history' %}" class="btn btn-sm btn-outline-light">View All <i
+                        class="bi bi-arrow-right ms-1"></i></a>
             </div>
-            <div class="card-body">
+            <div class="card-body p-0">
                 {% if recent_transactions %}
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Type</th>
-                                    <th>Amount</th>
-                                    <th>Description</th>
-                                    <th>Balance After</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for transaction in recent_transactions %}
-                                <tr>
-                                    <td>{{ transaction.created_at|date:"M d, Y H:i" }}</td>
-                                    <td>
-                                        {% if transaction.transaction_type == 'Deposit' %}
-                                            <span class="badge bg-success">{{ transaction.transaction_type }}</span>
-                                        {% elif transaction.transaction_type == 'Withdrawal' %}
-                                            <span class="badge bg-danger">{{ transaction.transaction_type }}</span>
-                                        {% elif transaction.transaction_type == 'Transfer' %}
-                                            <span class="badge bg-info">{{ transaction.transaction_type }}</span>
-                                        {% else %}
-                                            <span class="badge bg-secondary">{{ transaction.transaction_type }}</span>
-                                        {% endif %}
-                                    </td>
-                                    <td><strong>${{ transaction.amount|floatformat:2 }}</strong></td>
-                                    <td>{{ transaction.description|truncatewords:10 }}</td>
-                                    <td>${{ transaction.balance_after_transaction|floatformat:2 }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="text-center mt-3">
-                        <a href="{% url 'transactions:transaction_history' %}" class="btn btn-primary">View All Transactions</a>
-                    </div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                                <th>Balance After</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in recent_transactions %}
+                            <tr>
+                                <td>{{ transaction.created_at|date:"M d, Y H:i" }}</td>
+                                <td>
+                                    {% if transaction.transaction_type == 'Deposit' %}
+                                    <span class="badge bg-success">{{ transaction.transaction_type }}</span>
+                                    {% elif transaction.transaction_type == 'Withdrawal' %}
+                                    <span class="badge bg-danger">{{ transaction.transaction_type }}</span>
+                                    {% elif transaction.transaction_type == 'Transfer' %}
+                                    <span class="badge bg-info">{{ transaction.transaction_type }}</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{{ transaction.transaction_type }}</span>
+                                    {% endif %}
+                                </td>
+                                <td><strong>${{ transaction.amount|floatformat:2 }}</strong></td>
+                                <td style="color: var(--text-secondary);">{{ transaction.description|truncatewords:10 }}
+                                </td>
+                                <td>${{ transaction.balance_after_transaction|floatformat:2 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
                 {% else %}
-                    <div class="text-center py-5">
-                        <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
-                        <p class="text-muted mt-3">No transactions yet</p>
-                    </div>
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox" style="font-size: 3rem; opacity: 0.15;"></i>
+                    <p class="text-muted mt-3 mb-0">No transactions yet</p>
+                </div>
                 {% endif %}
             </div>
         </div>

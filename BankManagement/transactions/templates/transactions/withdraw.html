@@ -3,41 +3,127 @@
 {% block title %}Withdraw Money - SecureBank{% endblock %}
 
 {% block content %}
+<style>
+    .tx-form-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .tx-form-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 1.8rem;
+        color: white;
+    }
+
+    .tx-form-title {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 1.4rem;
+    }
+
+    .tx-form-subtitle {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .field-error {
+        background: rgba(255, 65, 108, 0.08);
+        border: 1px solid rgba(255, 65, 108, 0.15);
+        border-radius: 8px;
+        padding: 0.4rem 0.7rem;
+        color: #ff6b6b;
+        font-size: 0.82rem;
+        margin-top: 0.4rem;
+    }
+
+    .warning-banner {
+        background: rgba(247, 183, 51, 0.06);
+        border: 1px solid rgba(247, 183, 51, 0.15);
+        border-radius: var(--radius-md);
+        padding: 1rem 1.25rem;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+    }
+
+    .warning-banner .banner-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .warning-banner i.banner-icon {
+        font-size: 1.25rem;
+        color: #f7b733;
+    }
+
+    .balance-inline {
+        display: inline-block;
+        background: rgba(108, 99, 255, 0.1);
+        padding: 0.2em 0.6em;
+        border-radius: 6px;
+        font-weight: 700;
+        color: var(--accent-1);
+        margin-top: 0.35rem;
+    }
+</style>
+
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-6 col-lg-5">
         <div class="card">
-            <div class="card-header">
-                <h3 class="mb-0"><i class="bi bi-dash-circle"></i> Withdraw Money</h3>
-            </div>
-            <div class="card-body">
+            <div class="card-body" style="padding: 2.5rem;">
+                <div class="tx-form-header">
+                    <div class="tx-form-icon"
+                        style="background: var(--gradient-warning); box-shadow: 0 8px 25px rgba(247,183,51,0.25);">
+                        <i class="bi bi-cash-coin"></i>
+                    </div>
+                    <h3 class="tx-form-title">Withdraw Money</h3>
+                    <p class="tx-form-subtitle">Withdraw funds from your account</p>
+                </div>
+
                 {% if account %}
-                <div class="alert alert-warning">
-                    <i class="bi bi-info-circle"></i> Withdrawing from: <strong>{{ account.account_number }}</strong> - {{ account.get_full_name }}
-                    <br><small>Current Balance: <strong>${{ account.balance|floatformat:2 }}</strong></small>
+                <div class="warning-banner">
+                    <div class="banner-row">
+                        <i class="bi bi-exclamation-circle-fill banner-icon"></i>
+                        <div>
+                            Withdrawing from: <strong>{{ account.account_number }}</strong> — {{ account.get_full_name
+                            }}
+                        </div>
+                    </div>
+                    <div class="mt-2 ms-4 ps-2">
+                        Current Balance: <span class="balance-inline">${{ account.balance|floatformat:2 }}</span>
+                    </div>
                 </div>
                 {% endif %}
+
                 <form method="post">
                     {% csrf_token %}
                     <div class="mb-4">
-                        <label class="form-label fw-bold">
+                        <label class="form-label">
                             <i class="bi bi-credit-card"></i> Account Number
                         </label>
                         {{ form.account_number }}
                         {% if form.account_number.errors %}
-                            <div class="text-danger small mt-1">{{ form.account_number.errors }}</div>
+                        <div class="field-error">{{ form.account_number.errors }}</div>
                         {% endif %}
                     </div>
                     <div class="mb-4">
-                        <label class="form-label fw-bold">
+                        <label class="form-label">
                             <i class="bi bi-lock"></i> PIN
                         </label>
                         {{ form.pin }}
                         {% if form.pin.errors %}
-                            <div class="text-danger small mt-1">{{ form.pin.errors }}</div>
+                        <div class="field-error">{{ form.pin.errors }}</div>
                         {% endif %}
                     </div>
                     <div class="mb-4">
-                        <label class="form-label fw-bold">
+                        <label class="form-label">
                             <i class="bi bi-cash-stack"></i> Amount
                         </label>
                         <div class="input-group">
@@ -45,26 +131,26 @@
                             {{ form.amount }}
                         </div>
                         {% if form.amount.errors %}
-                            <div class="text-danger small mt-1">{{ form.amount.errors }}</div>
+                        <div class="field-error">{{ form.amount.errors }}</div>
                         {% endif %}
                     </div>
                     <div class="mb-4">
-                        <label class="form-label fw-bold">
+                        <label class="form-label">
                             <i class="bi bi-file-text"></i> Description (Optional)
                         </label>
                         {{ form.description }}
                         {% if form.description.errors %}
-                            <div class="text-danger small mt-1">{{ form.description.errors }}</div>
+                        <div class="field-error">{{ form.description.errors }}</div>
                         {% endif %}
                     </div>
                     {% if form.non_field_errors %}
-                        <div class="alert alert-danger">
-                            {{ form.non_field_errors }}
-                        </div>
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
                     {% endif %}
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-warning btn-lg">
-                            <i class="bi bi-check-circle"></i> Withdraw Money
+                            <i class="bi bi-check-circle me-2"></i> Withdraw Money
                         </button>
                         <a href="{% url 'accounts:home' %}" class="btn btn-secondary">Cancel</a>
                     </div>

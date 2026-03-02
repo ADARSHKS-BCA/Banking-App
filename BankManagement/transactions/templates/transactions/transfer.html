@@ -3,79 +3,261 @@
 {% block title %}Transfer Money - SecureBank{% endblock %}
 
 {% block content %}
+<style>
+    .tx-form-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .tx-form-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 1.8rem;
+        color: white;
+    }
+
+    .tx-form-title {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 1.4rem;
+    }
+
+    .tx-form-subtitle {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .field-error {
+        background: rgba(255, 65, 108, 0.08);
+        border: 1px solid rgba(255, 65, 108, 0.15);
+        border-radius: 8px;
+        padding: 0.4rem 0.7rem;
+        color: #ff6b6b;
+        font-size: 0.82rem;
+        margin-top: 0.4rem;
+    }
+
+    .info-banner {
+        background: rgba(79, 172, 254, 0.06);
+        border: 1px solid rgba(79, 172, 254, 0.15);
+        border-radius: var(--radius-md);
+        padding: 1rem 1.25rem;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+    }
+
+    .info-banner .banner-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .info-banner i.banner-icon {
+        font-size: 1.25rem;
+        color: #4facfe;
+    }
+
+    .balance-inline {
+        display: inline-block;
+        background: rgba(108, 99, 255, 0.1);
+        padding: 0.2em 0.6em;
+        border-radius: 6px;
+        font-weight: 700;
+        color: var(--accent-1);
+        margin-top: 0.35rem;
+    }
+
+    /* Transfer flow visual */
+    .transfer-flow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .transfer-flow-end {
+        text-align: center;
+        flex: 1;
+    }
+
+    .transfer-flow-end .flow-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-muted);
+        font-weight: 600;
+    }
+
+    .transfer-flow-end .flow-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        color: white;
+        margin-bottom: 0.3rem;
+    }
+
+    .transfer-flow-arrow {
+        color: var(--accent-3);
+        font-size: 1.5rem;
+        animation: arrowPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes arrowPulse {
+
+        0%,
+        100% {
+            opacity: 0.5;
+            transform: translateX(0);
+        }
+
+        50% {
+            opacity: 1;
+            transform: translateX(4px);
+        }
+    }
+
+    .section-divider {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin: 1.5rem 0 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .section-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border-subtle);
+    }
+</style>
+
 <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-md-8 col-lg-6">
         <div class="card">
-            <div class="card-header">
-                <h3 class="mb-0"><i class="bi bi-arrow-left-right"></i> Transfer Money</h3>
-            </div>
-            <div class="card-body">
+            <div class="card-body" style="padding: 2.5rem;">
+                <div class="tx-form-header">
+                    <div class="tx-form-icon"
+                        style="background: var(--gradient-info); box-shadow: 0 8px 25px rgba(79,172,254,0.25);">
+                        <i class="bi bi-send-fill"></i>
+                    </div>
+                    <h3 class="tx-form-title">Transfer Money</h3>
+                    <p class="tx-form-subtitle">Send funds to another account</p>
+                </div>
+
+                <!-- Transfer Flow Visual -->
+                <div class="transfer-flow">
+                    <div class="transfer-flow-end">
+                        <div class="flow-icon" style="background: var(--gradient-primary);"><i
+                                class="bi bi-person-fill"></i></div>
+                        <div class="flow-label">From</div>
+                    </div>
+                    <div class="transfer-flow-arrow">
+                        <i class="bi bi-arrow-right-circle-fill"></i>
+                    </div>
+                    <div class="transfer-flow-end">
+                        <div class="flow-icon" style="background: var(--gradient-success);"><i
+                                class="bi bi-person-fill"></i></div>
+                        <div class="flow-label">To</div>
+                    </div>
+                </div>
+
                 {% if account %}
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle"></i> Transferring from: <strong>{{ account.account_number }}</strong> - {{ account.get_full_name }}
-                    <br><small>Current Balance: <strong>${{ account.balance|floatformat:2 }}</strong></small>
+                <div class="info-banner">
+                    <div class="banner-row">
+                        <i class="bi bi-info-circle-fill banner-icon"></i>
+                        <div>
+                            Transferring from: <strong>{{ account.account_number }}</strong> — {{ account.get_full_name
+                            }}
+                        </div>
+                    </div>
+                    <div class="mt-2 ms-4 ps-2">
+                        Current Balance: <span class="balance-inline">${{ account.balance|floatformat:2 }}</span>
+                    </div>
                 </div>
                 {% endif %}
+
                 <form method="post">
                     {% csrf_token %}
+
+                    <div class="section-divider"><i class="bi bi-arrow-left-right"></i> Accounts</div>
                     <div class="row">
                         <div class="col-md-6 mb-4">
-                            <label class="form-label fw-bold">
-                                <i class="bi bi-credit-card"></i> From Account Number
+                            <label class="form-label">
+                                <i class="bi bi-credit-card"></i> From Account
                             </label>
                             {{ form.from_account_number }}
                             {% if form.from_account_number.errors %}
-                                <div class="text-danger small mt-1">{{ form.from_account_number.errors }}</div>
+                            <div class="field-error">{{ form.from_account_number.errors }}</div>
                             {% endif %}
                         </div>
                         <div class="col-md-6 mb-4">
-                            <label class="form-label fw-bold">
-                                <i class="bi bi-credit-card-2-front"></i> To Account Number
+                            <label class="form-label">
+                                <i class="bi bi-credit-card-2-front"></i> To Account
                             </label>
                             {{ form.to_account_number }}
                             {% if form.to_account_number.errors %}
-                                <div class="text-danger small mt-1">{{ form.to_account_number.errors }}</div>
+                            <div class="field-error">{{ form.to_account_number.errors }}</div>
                             {% endif %}
                         </div>
                     </div>
+
+                    <div class="section-divider"><i class="bi bi-shield-lock"></i> Verification</div>
                     <div class="mb-4">
-                        <label class="form-label fw-bold">
+                        <label class="form-label">
                             <i class="bi bi-lock"></i> PIN
                         </label>
                         {{ form.pin }}
                         {% if form.pin.errors %}
-                            <div class="text-danger small mt-1">{{ form.pin.errors }}</div>
+                        <div class="field-error">{{ form.pin.errors }}</div>
                         {% endif %}
                     </div>
+
+                    <div class="section-divider"><i class="bi bi-cash-stack"></i> Amount</div>
                     <div class="mb-4">
-                        <label class="form-label fw-bold">
-                            <i class="bi bi-cash-stack"></i> Amount
+                        <label class="form-label">
+                            <i class="bi bi-cash-stack"></i> Transfer Amount
                         </label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
                             {{ form.amount }}
                         </div>
                         {% if form.amount.errors %}
-                            <div class="text-danger small mt-1">{{ form.amount.errors }}</div>
+                        <div class="field-error">{{ form.amount.errors }}</div>
                         {% endif %}
                     </div>
                     <div class="mb-4">
-                        <label class="form-label fw-bold">
+                        <label class="form-label">
                             <i class="bi bi-file-text"></i> Description (Optional)
                         </label>
                         {{ form.description }}
                         {% if form.description.errors %}
-                            <div class="text-danger small mt-1">{{ form.description.errors }}</div>
+                        <div class="field-error">{{ form.description.errors }}</div>
                         {% endif %}
                     </div>
                     {% if form.non_field_errors %}
-                        <div class="alert alert-danger">
-                            {{ form.non_field_errors }}
-                        </div>
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
                     {% endif %}
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-info btn-lg">
-                            <i class="bi bi-check-circle"></i> Transfer Money
+                            <i class="bi bi-send-fill me-2"></i> Transfer Money
                         </button>
                         <a href="{% url 'accounts:home' %}" class="btn btn-secondary">Cancel</a>
                     </div>

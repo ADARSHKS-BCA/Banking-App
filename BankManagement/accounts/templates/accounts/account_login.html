@@ -3,119 +3,190 @@
 {% block title %}Login - SecureBank{% endblock %}
 
 {% block content %}
+<style>
+    .login-wrapper {
+        min-height: 75vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
-    <div class="col-lg-5 col-md-6 col-sm-8">
+    .login-card {
+        width: 100%;
+        max-width: 440px;
+    }
+
+    .login-icon-wrap {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2rem;
+        color: white;
+        box-shadow: 0 8px 30px rgba(108, 99, 255, 0.35);
+        animation: pulse-ring 3s ease-in-out infinite;
+    }
+
+    .login-title {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 1.6rem;
+        text-align: center;
+        margin-bottom: 0.25rem;
+    }
+
+    .login-subtitle {
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+    }
+
+    .login-input-group .input-group-text {
+        background: rgba(108, 99, 255, 0.08);
+        border: 1px solid var(--border-medium);
+        border-right: none;
+        color: var(--accent-1);
+    }
+
+    .login-input-group .form-control {
+        border-left: none;
+    }
+
+    .login-input-group:focus-within .input-group-text {
+        border-color: var(--accent-1);
+    }
+
+    .login-input-group:focus-within .form-control {
+        border-left: none;
+    }
+
+    .login-divider {
+        display: flex;
+        align-items: center;
+        margin: 1.75rem 0;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+    }
+
+    .login-divider::before,
+    .login-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border-subtle);
+    }
+
+    .login-divider span {
+        padding: 0 1rem;
+    }
+
+    .error-box {
+        background: rgba(255, 65, 108, 0.08);
+        border: 1px solid rgba(255, 65, 108, 0.2);
+        border-radius: var(--radius-md);
+        padding: 0.75rem 1rem;
+        color: #ff6b6b;
+        font-size: 0.88rem;
+        margin-bottom: 1.25rem;
+    }
+</style>
+
+<div class="login-wrapper">
+    <div class="login-card">
         <div class="card">
+            <div class="card-body" style="padding: 2.5rem;">
+                <!-- Icon -->
+                <div class="login-icon-wrap">
+                    <i class="bi bi-shield-lock-fill"></i>
+                </div>
+                <h3 class="login-title">Welcome Back</h3>
+                <p class="login-subtitle">Sign in to your SecureBank account</p>
 
-            <!-- Header -->
-            <div class="card-header text-center">
-                <h3 class="mb-0">
-                    <i class="bi bi-box-arrow-in-right"></i> Account Login
-                </h3>
-            </div>
-
-            <!-- Body -->
-            <div class="card-body px-4 py-4">
                 <form method="post">
                     {% csrf_token %}
 
                     <!-- Non-field Errors -->
                     {% if form.non_field_errors %}
-                        <div class="alert alert-danger mb-4" id="errorAlert" style="background-color: #fff3f3; border: 2px solid #dc3545; color: #721c24;">
-                            <strong><i class="bi bi-exclamation-triangle-fill me-2"></i></strong>
-                            {{ form.non_field_errors }}
-                        </div>
+                    <div class="error-box">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        {{ form.non_field_errors }}
+                    </div>
                     {% endif %}
 
                     <!-- Account Number -->
-                    <div class="mb-4">
-                        <label for="{{ form.account_number.id_for_label }}" class="form-label fw-bold d-flex align-items-center">
-                            <i class="bi bi-credit-card me-2"></i> Account Number
+                    <div class="mb-3">
+                        <label for="{{ form.account_number.id_for_label }}" class="form-label">
+                            <i class="bi bi-credit-card me-1"></i> Account Number
                         </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0">
-                                <i class="bi bi-person-badge text-primary"></i>
+                        <div class="input-group login-input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-person-badge"></i>
                             </span>
                             {{ form.account_number }}
                         </div>
                         {% if form.account_number.errors %}
-                            <div class="text-danger small mt-2 fw-bold" style="background-color: #fff3f3; padding: 0.5rem; border-radius: 5px; border-left: 3px solid #dc3545;">
-                                {{ form.account_number.errors }}
-                            </div>
+                        <div class="error-box mt-2" style="padding: 0.5rem 0.75rem; font-size:0.82rem;">
+                            {{ form.account_number.errors }}
+                        </div>
                         {% endif %}
                     </div>
 
                     <!-- PIN -->
                     <div class="mb-4">
-                        <label for="{{ form.pin.id_for_label }}" class="form-label fw-bold d-flex align-items-center">
-                            <i class="bi bi-lock me-2"></i> PIN
+                        <label for="{{ form.pin.id_for_label }}" class="form-label">
+                            <i class="bi bi-lock me-1"></i> PIN
                         </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0">
-                                <i class="bi bi-shield-lock text-primary"></i>
+                        <div class="input-group login-input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-shield-lock"></i>
                             </span>
                             {{ form.pin }}
                         </div>
                         {% if form.pin.errors %}
-                            <div class="text-danger small mt-2 fw-bold" style="background-color: #fff3f3; padding: 0.5rem; border-radius: 5px; border-left: 3px solid #dc3545;">
-                                {{ form.pin.errors }}
-                            </div>
+                        <div class="error-box mt-2" style="padding: 0.5rem 0.75rem; font-size:0.82rem;">
+                            {{ form.pin.errors }}
+                        </div>
                         {% endif %}
                     </div>
 
                     <!-- Submit Button -->
-                    <div class="d-grid gap-2 mt-4">
+                    <div class="d-grid">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="bi bi-box-arrow-in-right me-2"></i> Login
+                            <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
                         </button>
                     </div>
                 </form>
 
                 <!-- Divider -->
-                <hr class="my-4">
+                <div class="login-divider">
+                    <span>New here?</span>
+                </div>
 
                 <!-- Create Account Link -->
-                <div class="text-center">
-                    <p class="mb-2 text-muted">Don't have an account?</p>
+                <div class="d-grid">
                     <a href="{% url 'accounts:account_create' %}" class="btn btn-outline-primary">
                         <i class="bi bi-person-plus me-2"></i> Create New Account
                     </a>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
 
-<style>
-    .input-group .form-control {
-        border-left: 0;
-    }
-    
-    .input-group-text {
-        border-right: 0;
-        border-radius: 10px 0 0 10px !important;
-    }
-    
-    .input-group .form-control:focus {
-        border-left: 0;
-    }
-    
-    .input-group:focus-within .input-group-text {
-        border-color: #2a5298;
-    }
-</style>
-
 <script>
     // Auto-dismiss error alert after 5 seconds
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const errorAlert = document.getElementById('errorAlert');
         if (errorAlert) {
-            setTimeout(function() {
+            setTimeout(function () {
                 errorAlert.style.transition = 'opacity 0.5s ease';
                 errorAlert.style.opacity = '0';
-                setTimeout(function() {
+                setTimeout(function () {
                     errorAlert.remove();
                 }, 500);
             }, 5000);

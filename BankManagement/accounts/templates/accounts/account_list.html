@@ -3,68 +3,114 @@
 {% block title %}All Accounts - Bank Management System{% endblock %}
 
 {% block content %}
+<style>
+    .page-title-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+    }
+
+    .page-title-bar h3 {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin: 0;
+    }
+
+    .search-bar {
+        background: var(--glass-bg);
+        border: var(--glass-border);
+        border-radius: var(--radius-lg);
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .search-bar .input-group .form-control {
+        border-radius: var(--radius-md) 0 0 var(--radius-md);
+    }
+
+    .search-bar .input-group .btn {
+        border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+</style>
+
+<div class="page-title-bar">
+    <h3><i class="bi bi-people-fill me-2"
+            style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+        All Accounts</h3>
+    <a href="{% url 'accounts:account_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i> Create New
+    </a>
+</div>
+
+<div class="search-bar">
+    <form method="get">
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" name="search" class="form-control"
+                placeholder="Search by account number, name, email, or phone..." value="{{ search_query }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+</div>
+
 <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="mb-0">All Accounts</h3>
-        <a href="{% url 'accounts:account_create' %}" class="btn btn-light">+ Create New Account</a>
-    </div>
-    <div class="card-body">
-        <form method="get" class="mb-4">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Search by account number, name, email, or phone..." value="{{ search_query }}">
-                <button class="btn btn-primary" type="submit">Search</button>
-            </div>
-        </form>
-        
+    <div class="card-body p-0">
         {% if accounts %}
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Account Number</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Account Type</th>
-                            <th>Balance</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for account in accounts %}
-                        <tr>
-                            <td><strong>{{ account.account_number }}</strong></td>
-                            <td>{{ account.get_full_name }}</td>
-                            <td>{{ account.email }}</td>
-                            <td>{{ account.phone }}</td>
-                            <td>{{ account.account_type }}</td>
-                            <td>${{ account.balance|floatformat:2 }}</td>
-                            <td>
-                                {% if account.status == 'Active' %}
-                                    <span class="badge bg-success">{{ account.status }}</span>
-                                {% elif account.status == 'Inactive' %}
-                                    <span class="badge bg-warning">{{ account.status }}</span>
-                                {% else %}
-                                    <span class="badge bg-danger">{{ account.status }}</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <a href="{% url 'accounts:account_detail' account.account_number %}" class="btn btn-sm btn-primary">View</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Account Number</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Type</th>
+                        <th>Balance</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for account in accounts %}
+                    <tr>
+                        <td><strong style="color: var(--accent-1);">{{ account.account_number }}</strong></td>
+                        <td>{{ account.get_full_name }}</td>
+                        <td style="color: var(--text-secondary);">{{ account.email }}</td>
+                        <td style="color: var(--text-secondary);">{{ account.phone }}</td>
+                        <td><span class="badge bg-primary">{{ account.account_type }}</span></td>
+                        <td><strong>${{ account.balance|floatformat:2 }}</strong></td>
+                        <td>
+                            {% if account.status == 'Active' %}
+                            <span class="badge bg-success">{{ account.status }}</span>
+                            {% elif account.status == 'Inactive' %}
+                            <span class="badge bg-warning">{{ account.status }}</span>
+                            {% else %}
+                            <span class="badge bg-danger">{{ account.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'accounts:account_detail' account.account_number %}"
+                                class="btn btn-sm btn-outline-light">
+                                <i class="bi bi-eye me-1"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
-            <div class="alert alert-info">
-                <h5>No accounts found!</h5>
-                <p>Create your first account to get started.</p>
-                <a href="{% url 'accounts:account_create' %}" class="btn btn-primary">Create Account</a>
-            </div>
+        <div class="text-center py-5">
+            <i class="bi bi-people" style="font-size: 3rem; opacity: 0.15;"></i>
+            <h5 class="mt-3" style="color: var(--text-secondary);">No accounts found</h5>
+            <p class="text-muted mb-3">Create your first account to get started.</p>
+            <a href="{% url 'accounts:account_create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i> Create Account
+            </a>
+        </div>
         {% endif %}
     </div>
 </div>
 {% endblock %}
-

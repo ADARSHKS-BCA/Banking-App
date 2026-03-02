@@ -5,154 +5,411 @@
 {% block content %}
 {% if account %}
 <style>
-    .action-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
-        padding: 1.5rem;
+    /* ── Welcome Section ── */
+    .welcome-section {
         text-align: center;
-        transition: all 0.3s ease;
-        height: 100%;
+        padding: 2rem 0 1rem;
+    }
+
+    .welcome-greeting {
+        font-size: 1rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .welcome-name {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 2rem;
+    }
+
+    /* ── Balance Card ── */
+    .balance-hero {
+        position: relative;
+        background: var(--gradient-primary);
+        border-radius: var(--radius-xl);
+        padding: 2.5rem 2rem;
+        text-align: center;
+        margin-bottom: 2.5rem;
+        overflow: hidden;
+        box-shadow: 0 15px 50px rgba(108, 99, 255, 0.3);
+    }
+
+    .balance-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -30%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+    }
+
+    .balance-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -40%;
+        left: -20%;
+        width: 250px;
+        height: 250px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+    }
+
+    .balance-label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        opacity: 0.8;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .balance-amount {
+        font-family: 'Outfit', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 800;
+        letter-spacing: -2px;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        position: relative;
+        z-index: 1;
+        animation: balancePulse 3s ease-in-out infinite;
+    }
+
+    .balance-currency {
+        font-size: 2rem;
+        font-weight: 400;
+        opacity: 0.8;
+        vertical-align: top;
+        margin-right: 0.25rem;
+    }
+
+    .balance-account-info {
+        font-size: 0.85rem;
+        opacity: 0.7;
+        margin-top: 0.75rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    @keyframes balancePulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.01);
+        }
+    }
+
+    /* ── Action Cards ── */
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .action-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        border: var(--glass-border);
+        border-radius: var(--radius-lg);
+        padding: 1.75rem 1.25rem;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .action-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
     }
 
     .action-card:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: translateY(-5px);
+        background: var(--bg-card-hover);
+        transform: translateY(-6px);
+        border-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
     }
 
-    .action-icon {
-        font-size: 2.5rem;
+    .action-card:hover::before {
+        opacity: 1;
+    }
+
+    .action-card:nth-child(1)::before {
+        background: var(--gradient-success);
+    }
+
+    .action-card:nth-child(2)::before {
+        background: var(--gradient-warning);
+    }
+
+    .action-card:nth-child(3)::before {
+        background: var(--gradient-info);
+    }
+
+    .action-card:nth-child(4)::before {
+        background: var(--gradient-primary);
+    }
+
+    .action-icon-wrap {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
         margin-bottom: 1rem;
-        background: -webkit-linear-gradient(45deg, #00dbde, #fc00ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: white;
+        position: relative;
+    }
+
+    .action-card:nth-child(1) .action-icon-wrap {
+        background: var(--gradient-success);
+        box-shadow: 0 6px 20px rgba(56, 239, 125, 0.25);
+    }
+
+    .action-card:nth-child(2) .action-icon-wrap {
+        background: var(--gradient-warning);
+        box-shadow: 0 6px 20px rgba(247, 183, 51, 0.25);
+    }
+
+    .action-card:nth-child(3) .action-icon-wrap {
+        background: var(--gradient-info);
+        box-shadow: 0 6px 20px rgba(79, 172, 254, 0.25);
+    }
+
+    .action-card:nth-child(4) .action-icon-wrap {
+        background: var(--gradient-primary);
+        box-shadow: 0 6px 20px rgba(108, 99, 255, 0.25);
+    }
+
+    .action-title {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+    }
+
+    .action-desc {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+        .action-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .balance-amount {
+            font-size: 2.5rem;
+        }
+    }
+
+    /* ── Recent Transactions ── */
+    .tx-type-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        margin-right: 0.5rem;
+    }
+
+    .tx-deposit .tx-type-icon {
+        background: rgba(56, 239, 125, 0.12);
+        color: #38ef7d;
+    }
+
+    .tx-withdraw .tx-type-icon {
+        background: rgba(255, 75, 43, 0.12);
+        color: #ff6b6b;
+    }
+
+    .tx-transfer .tx-type-icon {
+        background: rgba(79, 172, 254, 0.12);
+        color: #4facfe;
+    }
+
+    .stagger-row {
+        animation: fadeSlideUp 0.5s ease forwards;
+        opacity: 0;
+    }
+
+    .stagger-row:nth-child(1) {
+        animation-delay: 0.05s;
+    }
+
+    .stagger-row:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+
+    .stagger-row:nth-child(3) {
+        animation-delay: 0.15s;
+    }
+
+    .stagger-row:nth-child(4) {
+        animation-delay: 0.2s;
+    }
+
+    .stagger-row:nth-child(5) {
+        animation-delay: 0.25s;
     }
 </style>
 
-<div class="row mb-5">
-    <div class="col-md-6 mx-auto">
-        <!-- Balance Display -->
-        <div class="text-center mt-4">
-            <h6 class="text-white-50 text-uppercase letter-spacing-2">Total Balance</h6>
-            <h1 class="text-white fw-bold display-4">{{ account.balance }}</h1>
-        </div>
-    </div>
+<!-- Welcome -->
+<div class="welcome-section">
+    <div class="welcome-greeting">Welcome Back</div>
 </div>
 
+<!-- Balance Hero -->
 <div class="row mb-4">
-    <div class="col-md-3 mb-3">
-        <a href="{% url 'transactions:deposit' %}" class="text-decoration-none">
-            <div class="action-card">
-                <div class="action-icon">
-                    <i class="bi bi-wallet2"></i>
-                </div>
-                <h5 class="text-white">Deposit</h5>
-                <p class="text-white-50 small mb-0">Add funds instantly</p>
+    <div class="col-lg-8 mx-auto">
+        <div class="balance-hero">
+            <div class="balance-label">Total Balance</div>
+            <div class="balance-amount">
+                <span class="balance-currency">$</span>{{ account.balance }}
             </div>
-        </a>
-    </div>
-    <div class="col-md-3 mb-3">
-        <a href="{% url 'transactions:withdraw' %}" class="text-decoration-none">
-            <div class="action-card">
-                <div class="action-icon">
-                    <i class="bi bi-cash-coin"></i>
-                </div>
-                <h5 class="text-white">Withdraw</h5>
-                <p class="text-white-50 small mb-0">Get cash out</p>
+            <div class="balance-account-info">
+                <i class="bi bi-credit-card-2-front me-1"></i> Account: {{ account.account_number }}
             </div>
-        </a>
-    </div>
-    <div class="col-md-3 mb-3">
-        <a href="{% url 'transactions:transfer' %}" class="text-decoration-none">
-            <div class="action-card">
-                <div class="action-icon">
-                    <i class="bi bi-send"></i>
-                </div>
-                <h5 class="text-white">Transfer</h5>
-                <p class="text-white-50 small mb-0">Send to friends</p>
-            </div>
-        </a>
-    </div>
-    <div class="col-md-3 mb-3">
-        <a href="{% url 'transactions:transaction_history' %}" class="text-decoration-none">
-            <div class="action-card">
-                <div class="action-icon">
-                    <i class="bi bi-clock-history"></i>
-                </div>
-                <h5 class="text-white">History</h5>
-                <p class="text-white-50 small mb-0">Track spending</p>
-            </div>
-        </a>
+        </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i> Recent Transactions</h5>
-                <a href="{% url 'transactions:transaction_history' %}" class="btn btn-sm btn-outline-light">View All</a>
+<!-- Action Cards -->
+<div class="action-grid">
+    <a href="{% url 'transactions:deposit' %}" class="text-decoration-none">
+        <div class="action-card">
+            <div class="action-icon-wrap">
+                <i class="bi bi-wallet2"></i>
             </div>
-            <div class="card-body">
-                {% if recent_transactions %}
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Type</th>
-                                <th>Description</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for transaction in recent_transactions %}
-                            <tr>
-                                <td>
-                                    <div class="d-flex flex-column">
-                                        <span class="fw-bold">{{ transaction.created_at|date:"M d" }}</span>
-                                        <small class="text-white-50">{{ transaction.created_at|date:"H:i" }}</small>
-                                    </div>
-                                </td>
-                                <td>
-                                    {% if transaction.transaction_type == 'Deposit' %}
-                                    <div class="d-flex align-items-center text-success">
-                                        <i class="bi bi-arrow-down-circle-fill me-2"></i> Deposit
-                                    </div>
-                                    {% elif transaction.transaction_type == 'Withdrawal' %}
-                                    <div class="d-flex align-items-center text-danger">
-                                        <i class="bi bi-arrow-up-circle-fill me-2"></i> Withdrawal
-                                    </div>
-                                    {% elif transaction.transaction_type == 'Transfer' %}
-                                    <div class="d-flex align-items-center text-info">
-                                        <i class="bi bi-arrow-right-circle-fill me-2"></i> Transfer
-                                    </div>
-                                    {% else %}
-                                    <span class="badge bg-secondary">{{ transaction.transaction_type }}</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ transaction.description|default:"-" }}</td>
-                                <td
-                                    class="fw-bold {% if transaction.transaction_type == 'Deposit' %}text-success{% else %}text-white{% endif %}">
-                                    {% if transaction.transaction_type == 'Deposit' %}+{% else %}-{% endif %}
-                                    Deposited
-                                </td>
-                                <td><span class="badge bg-success bg-opacity-25 text-success">Completed</span></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="text-center py-5">
-                    <i class="bi bi-receipt" style="font-size: 3rem; opacity: 0.3;"></i>
-                    <p class="text-white-50 mt-3">No recent transactions found</p>
-                </div>
-                {% endif %}
-            </div>
+            <h5 class="action-title">Deposit</h5>
+            <p class="action-desc">Add funds instantly</p>
         </div>
+    </a>
+    <a href="{% url 'transactions:withdraw' %}" class="text-decoration-none">
+        <div class="action-card">
+            <div class="action-icon-wrap">
+                <i class="bi bi-cash-coin"></i>
+            </div>
+            <h5 class="action-title">Withdraw</h5>
+            <p class="action-desc">Get cash out</p>
+        </div>
+    </a>
+    <a href="{% url 'transactions:transfer' %}" class="text-decoration-none">
+        <div class="action-card">
+            <div class="action-icon-wrap">
+                <i class="bi bi-send-fill"></i>
+            </div>
+            <h5 class="action-title">Transfer</h5>
+            <p class="action-desc">Send to friends</p>
+        </div>
+    </a>
+    <a href="{% url 'transactions:transaction_history' %}" class="text-decoration-none">
+        <div class="action-card">
+            <div class="action-icon-wrap">
+                <i class="bi bi-clock-history"></i>
+            </div>
+            <h5 class="action-title">History</h5>
+            <p class="action-desc">Track spending</p>
+        </div>
+    </a>
+</div>
+
+<!-- Recent Transactions -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i> Recent Transactions</h5>
+        <a href="{% url 'transactions:transaction_history' %}" class="btn btn-sm btn-outline-light">View All <i
+                class="bi bi-arrow-right ms-1"></i></a>
+    </div>
+    <div class="card-body p-0">
+        {% if recent_transactions %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in recent_transactions %}
+                    <tr class="stagger-row">
+                        <td>
+                            <div class="d-flex flex-column">
+                                <span class="fw-bold" style="font-size:0.9rem;">{{ transaction.created_at|date:"M d"
+                                    }}</span>
+                                <small class="text-muted">{{ transaction.created_at|date:"H:i" }}</small>
+                            </div>
+                        </td>
+                        <td>
+                            {% if transaction.transaction_type == 'Deposit' %}
+                            <div class="d-flex align-items-center tx-deposit">
+                                <span class="tx-type-icon"><i class="bi bi-arrow-down-short"></i></span>
+                                <span style="color:#38ef7d; font-weight:600;">Deposit</span>
+                            </div>
+                            {% elif transaction.transaction_type == 'Withdrawal' %}
+                            <div class="d-flex align-items-center tx-withdraw">
+                                <span class="tx-type-icon"><i class="bi bi-arrow-up-short"></i></span>
+                                <span style="color:#ff6b6b; font-weight:600;">Withdrawal</span>
+                            </div>
+                            {% elif transaction.transaction_type == 'Transfer' %}
+                            <div class="d-flex align-items-center tx-transfer">
+                                <span class="tx-type-icon"><i class="bi bi-arrow-right-short"></i></span>
+                                <span style="color:#4facfe; font-weight:600;">Transfer</span>
+                            </div>
+                            {% else %}
+                            <span class="badge bg-secondary">{{ transaction.transaction_type }}</span>
+                            {% endif %}
+                        </td>
+                        <td style="color: var(--text-secondary);">{{ transaction.description|default:"-" }}</td>
+                        <td class="fw-bold {% if transaction.transaction_type == 'Deposit' %}text-success{% else %}{% endif %}"
+                            style="font-size:0.95rem;">
+                            {% if transaction.transaction_type == 'Deposit' %}+{% else %}-{% endif %}
+                            ${{ transaction.amount|floatformat:2 }}
+                        </td>
+                        <td><span class="badge bg-success">Completed</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <div style="font-size: 3rem; opacity: 0.15; margin-bottom:1rem;">
+                <i class="bi bi-receipt-cutoff"></i>
+            </div>
+            <p class="text-muted mb-0">No recent transactions found</p>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endif %}

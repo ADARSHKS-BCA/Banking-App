@@ -3,44 +3,118 @@
 {% block title %}Transaction History - SecureBank{% endblock %}
 
 {% block content %}
-<div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="mb-0"><i class="bi bi-clock-history"></i> Transaction History</h3>
-        <a href="{% url 'accounts:account_detail' %}" class="btn btn-light">
-            <i class="bi bi-arrow-left"></i> Back to Account
-        </a>
-    </div>
-    <div class="card-body">
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="card bg-light">
-                    <div class="card-body">
-                        <label class="text-muted small">Account Holder</label>
-                        <p class="h5 mb-0">{{ account.get_full_name }}</p>
-                        <small class="text-muted">Account: {{ account.account_number }}</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card bg-primary text-white">
-                    <div class="card-body">
-                        <label class="small opacity-75">Current Balance</label>
-                        <p class="h4 mb-0">${{ account.balance|floatformat:2 }}</p>
-                    </div>
-                </div>
+<style>
+    .page-title-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+    }
+
+    .page-title-bar h3 {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin: 0;
+    }
+
+    .summary-card {
+        background: var(--glass-bg);
+        border: var(--glass-border);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .summary-card:hover {
+        background: var(--bg-card-hover);
+        border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .summary-card .sc-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .summary-card .sc-label i {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .summary-card .sc-value {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 1.3rem;
+    }
+
+    .balance-card-gradient {
+        background: var(--gradient-primary);
+        border: none;
+        box-shadow: 0 8px 25px rgba(108, 99, 255, 0.25);
+    }
+
+    .balance-card-gradient .sc-label {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .balance-card-gradient .sc-label i {
+        -webkit-text-fill-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .balance-card-gradient .sc-value {
+        color: white;
+    }
+</style>
+
+<div class="page-title-bar">
+    <h3><i class="bi bi-clock-history me-2"
+            style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+        Transaction History</h3>
+    <a href="{% url 'accounts:account_detail' %}" class="btn btn-outline-light">
+        <i class="bi bi-arrow-left me-1"></i> Back to Account
+    </a>
+</div>
+
+<!-- Summary Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="summary-card">
+            <div class="sc-label"><i class="bi bi-person"></i> Account Holder</div>
+            <div class="sc-value">{{ account.get_full_name }}</div>
+            <div style="font-size:0.8rem; color: var(--text-muted); margin-top:0.15rem;">
+                <code style="font-size:0.8rem;">{{ account.account_number }}</code>
             </div>
         </div>
-        <hr>
+    </div>
+    <div class="col-md-6">
+        <div class="summary-card balance-card-gradient">
+            <div class="sc-label"><i class="bi bi-wallet2"></i> Current Balance</div>
+            <div class="sc-value">${{ account.balance|floatformat:2 }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Transactions Table -->
+<div class="card">
+    <div class="card-body p-0">
         {% if transactions %}
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover mb-0">
                 <thead>
                     <tr>
                         <th>Date & Time</th>
                         <th>Type</th>
                         <th>Amount</th>
-                        <th>From Account</th>
-                        <th>To Account</th>
+                        <th>From</th>
+                        <th>To</th>
                         <th>Description</th>
                         <th>Balance After</th>
                         <th>Status</th>
@@ -49,7 +123,11 @@
                 <tbody>
                     {% for transaction in transactions %}
                     <tr>
-                        <td>{{ transaction.created_at|date:"M d, Y H:i" }}</td>
+                        <td>
+                            <span style="font-weight:600; font-size:0.9rem;">{{ transaction.created_at|date:"M d, Y"
+                                }}</span>
+                            <br><small class="text-muted">{{ transaction.created_at|date:"H:i" }}</small>
+                        </td>
                         <td>
                             {% if transaction.transaction_type == 'Deposit' %}
                             <span class="badge bg-success">{{ transaction.transaction_type }}</span>
@@ -61,22 +139,23 @@
                             <span class="badge bg-secondary">{{ transaction.transaction_type }}</span>
                             {% endif %}
                         </td>
-                        <td><strong>{{ transaction.amount|floatformat:2 }}</strong></td>
+                        <td><strong>${{ transaction.amount|floatformat:2 }}</strong></td>
                         <td>
                             {% if transaction.from_account %}
                             <code>{{ transaction.from_account.account_number }}</code>
                             {% else %}
-                            <span class="text-muted">-</span>
+                            <span style="color: var(--text-muted);">—</span>
                             {% endif %}
                         </td>
                         <td>
                             {% if transaction.to_account %}
                             <code>{{ transaction.to_account.account_number }}</code>
                             {% else %}
-                            <span class="text-muted">-</span>
+                            <span style="color: var(--text-muted);">—</span>
                             {% endif %}
                         </td>
-                        <td>{{ transaction.description|default:"-"|truncatewords:8 }}</td>
+                        <td style="color: var(--text-secondary);">{{ transaction.description|default:"-"|truncatewords:8
+                            }}</td>
                         <td><strong>${{ transaction.balance_after_transaction|floatformat:2 }}</strong></td>
                         <td>
                             {% if transaction.status == 'Completed' %}
@@ -94,9 +173,9 @@
         </div>
         {% else %}
         <div class="text-center py-5">
-            <i class="bi bi-inbox" style="font-size: 4rem; color: #ccc;"></i>
-            <h5 class="mt-3 text-muted">No transactions found!</h5>
-            <p class="text-muted">This account has no transaction history yet.</p>
+            <i class="bi bi-inbox" style="font-size: 3.5rem; opacity: 0.12;"></i>
+            <h5 class="mt-3" style="color: var(--text-secondary);">No transactions found</h5>
+            <p class="text-muted mb-0">This account has no transaction history yet.</p>
         </div>
         {% endif %}
     </div>
